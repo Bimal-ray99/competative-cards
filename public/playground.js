@@ -8,6 +8,19 @@
     rating: ['rating', 'maxRating', 'rank', 'maxRank', 'contests', 'solved', 'graph'],
     heatmap: [],
     combined: ['leetcode', 'codeforces', 'ranking', 'streak', 'rank', 'solved'],
+    duet: [
+      'easy',
+      'medium',
+      'hard',
+      'solved',
+      'acceptance',
+      'streak',
+      'rating',
+      'maxRating',
+      'rank',
+      'maxRank',
+      'contests',
+    ],
     skills: [],
     languages: [],
   };
@@ -38,6 +51,7 @@
     rating: 'codeforces',
     heatmap: 'any',
     combined: 'any',
+    duet: 'any',
   };
   const DEFAULT_CARD_FOR = {
     leetcode: 'overview',

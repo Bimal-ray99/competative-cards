@@ -52,7 +52,7 @@ describe('renderCard', () => {
 
   it('renders codeforces rating card including graph', () => {
     const svg = renderCard({ type: 'rating', codeforces: cf, themeName: 'dark' });
-    expect(svg).toContain('Codeforces');
+    expect(svg).toMatch(/CODEFORCES/i);
     expect(svg).toContain('<path');
   });
 

@@ -82,6 +82,9 @@ export function renderCard({
     case 'combined':
       if (!leetcode && !codeforces) throw badRequest('combined requires at least one user');
       return renderCombined(leetcode, codeforces, opts);
+    case 'duet':
+      if (!leetcode && !codeforces) throw badRequest('duet requires at least one user');
+      return renderDuet(leetcode, codeforces, opts);
     case 'skills':
       if (!leetcode) throw badRequest('skills card requires leetcode user');
       return renderSkills(leetcode, opts);

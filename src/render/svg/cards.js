@@ -808,7 +808,7 @@ export function renderDuet(leet, cf, { theme, title, hide = [], options = {} } =
   const dateStr = new Date().toISOString().slice(0, 10);
 
   const blocks = [];
-  let colHeights = [0, 0];
+  const colHeights = [0, 0];
 
   if (leet) {
     const lcRows = buildLeetCodeRows(leet, hide, { ...options, theme });

@@ -54,6 +54,7 @@ const ALLOWED_CARDS = new Set([
   'rating',
   'heatmap',
   'combined',
+  'duet',
   'skills',
   'languages',
 ]);

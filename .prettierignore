@@ -1,0 +1,7 @@
+node_modules
+coverage
+dist
+.claude
+.github/ISSUE_TEMPLATE
+.github/pull_request_template.md
+README.md

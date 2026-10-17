@@ -1,0 +1,42 @@
+{
+  "name": "competitive-cards",
+  "version": "0.1.0",
+  "description": "SVG stats cards for LeetCode and Codeforces profiles, embeddable in GitHub READMEs.",
+  "type": "module",
+  "main": "src/app.js",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.9.0",
+    "prettier": "^3.3.3",
+    "vitest": "^2.0.5"
+  },
+  "keywords": [
+    "leetcode",
+    "codeforces",
+    "svg",
+    "readme",
+    "stats",
+    "competitive-programming",
+    "github-profile"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-user/competitive-cards"
+  }
+}

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>competitive-cards · playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="site-head">
+      <div class="brand">
+        <h1><span class="brand-accent">c</span>ompetitive-cards</h1>
+        <p class="tagline">
+          A composable LeetCode, Codeforces, and GitHub stats card for your GitHub README — profile,
+          solved, streak, skills, languages, and a submission heatmap, each toggleable, in 20+
+          themes. Pick your sections below and copy the embed markdown.
+        </p>
+      </div>
+      <div class="actions">
+        <a
+          class="btn ghost"
+          href="https://github.com/your-user/competitive-cards"
+          target="_blank"
+          rel="noopener"
+          >★ GitHub</a
+        >
+        <button class="btn ghost" id="toggleTheme" type="button">Toggle page theme</button>
+      </div>
+    </header>
+
+    <div class="status-banner">
+      <span class="dot"></span>
+      <span id="status">Enter a username to begin.</span>
+    </div>
+
+    <main class="layout">
+      <aside class="panel">
+        <section>
+          <h2>Users</h2>
+          <label for="leetcode">LeetCode username</label>
+          <input id="leetcode" type="text" autocomplete="off" placeholder="e.g. neal_wu" />
+          <label for="codeforces">Codeforces handle</label>
+          <input id="codeforces" type="text" autocomplete="off" placeholder="e.g. tourist" />
+          <label for="github">GitHub username</label>
+          <input id="github" type="text" autocomplete="off" placeholder="e.g. torvalds" />
+          <p class="hint">At least one required. GitHub streaks need <code>GITHUB_TOKEN</code>.</p>
+        </section>
+
+        <section>
+          <h2>Card type</h2>
+          <select id="type">
+            <optgroup label="LeetCode">
+              <option value="overview">Overview</option>
+              <option value="problems">Problems</option>
+              <option value="streak">Streak</option>
+              <option value="skills">Top Skills</option>
+              <option value="languages">Languages</option>
+            </optgroup>
+            <optgroup label="Codeforces">
+              <option value="rating">Rating</option>
+            </optgroup>
+            <optgroup label="GitHub">
+              <option value="github-stats">GitHub Stats</option>
+              <option value="github-streak">GitHub Streak</option>
+              <option value="github-langs">Top Languages</option>
+              <option value="github-profile">Profile</option>
+            </optgroup>
+            <optgroup label="Mixed">
+              <option value="heatmap">Activity heatmap</option>
+              <option value="combined">Combined</option>
+            </optgroup>
+          </select>
+        </section>
+
+        <section>
+          <h2>Theme</h2>
+          <select id="theme"></select>
+          <p class="hint" id="themeCount">loading themes…</p>
+        </section>
+
+        <section>
+          <h2>Hide fields</h2>
+          <div class="chips" id="hideChips"></div>
+          <p class="hint">Available fields depend on the selected card type.</p>
+        </section>
+
+        <section>
+          <h2>Appearance</h2>
+          <label class="row">
+            <input type="checkbox" id="hide_border" />
+            <span>Hide border</span>
+          </label>
+          <label class="row">
+            <input type="checkbox" id="transparent" />
+            <span>Transparent background</span>
+          </label>
+          <label class="row">
+            <input type="checkbox" id="disable_animations" />
+            <span>Disable animations</span>
+          </label>
+          <label class="row">
+            <input type="checkbox" id="short_numbers" />
+            <span>Short numbers (1.5K)</span>
+          </label>
+          <label for="radius">Border radius <span class="num" id="radiusVal">8</span></label>
+          <input id="radius" type="range" min="0" max="60" value="8" />
+          <label for="top_skills">Top skills <span class="num" id="topSkillsVal">12</span></label>
+          <input id="top_skills" type="range" min="1" max="12" value="12" />
+          <label for="top_langs">Top languages <span class="num" id="topLangsVal">12</span></label>
+          <input id="top_langs" type="range" min="1" max="12" value="12" />
+          <label for="title">Custom title</label>
+          <input id="title" type="text" placeholder="optional" />
+        </section>
+
+        <details id="advanced">
+          <summary>Custom colors (advanced)</summary>
+          <p class="hint">Overrides the chosen theme per semantic role.</p>
+          <div class="colors">
+            <label>bg <input type="color" id="bg" value="#0d1117" /></label>
+            <label>border <input type="color" id="border" value="#30363d" /></label>
+            <label>title <input type="color" id="title_color" value="#58a6ff" /></label>
+            <label>text <input type="color" id="text" value="#c9d1d9" /></label>
+            <label>muted <input type="color" id="muted" value="#8b949e" /></label>
+            <label>accent <input type="color" id="accent" value="#f78166" /></label>
+            <label>streak <input type="color" id="streak" value="#ff7b00" /></label>
+            <label>ring <input type="color" id="ring" value="#ff7b00" /></label>
+            <label>fire <input type="color" id="fire" value="#ff7b00" /></label>
+            <label>chip <input type="color" id="chip" value="#161b22" /></label>
+          </div>
+        </details>
+      </aside>
+
+      <section class="preview">
+        <div class="card-wrap">
+          <img id="cardImg" alt="card preview" />
+        </div>
+
+        <div class="embed">
+          <h3>Embed markdown</h3>
+          <div class="copy-row">
+            <input id="embedMd" type="text" readonly />
+            <button class="btn" type="button" data-copy="embedMd">Copy</button>
+          </div>
+          <h3>Dual-theme embed (switches with GitHub's theme)</h3>
+          <div class="copy-row">
+            <textarea id="dualEmbed" rows="6" readonly></textarea>
+            <button class="btn" type="button" data-copy="dualEmbed">Copy</button>
+          </div>
+          <h3>Raw card URL</h3>
+          <div class="copy-row">
+            <input id="rawUrl" type="text" readonly />
+            <button class="btn" type="button" data-copy="rawUrl">Copy</button>
+          </div>
+        </div>
+
+        <p class="footer-note">
+          Streaks use the UTC calendar. When the upstream exposes a limited window, the card shows a
+          "limited" note instead of fabricating history. GitHub streaks require
+          <code>GITHUB_TOKEN</code>; without it, those fields are marked unavailable. See the
+          project README for the full options reference.
+        </p>
+      </section>
+    </main>
+
+    <script src="/playground.js"></script>
+  </body>
+</html>

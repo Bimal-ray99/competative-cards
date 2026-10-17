@@ -549,8 +549,8 @@ export function renderLanguages(stats, { theme, title, hide: _hide = [], options
   return wrapSvg({ width: WIDTH, height, title: t, children, theme, options });
 }
 
-export function renderCombined(leet, cf, gh, { theme, title, hide = [], options = {} } = {}) {
-  const name = leet?.username || cf?.username || gh?.username || 'profile';
+export function renderCombined(leet, cf, { theme, title, hide = [], options = {} } = {}) {
+  const name = leet?.username || cf?.username || 'profile';
   const t = title || `${escapeXml(name)} · Competitive Programming`;
   const fmt = (n) => formatNumber(n, options.shortNumbers);
   const rows = [text(25, 35, t, 'title')];
@@ -577,14 +577,6 @@ export function renderCombined(leet, cf, gh, { theme, title, hide = [], options 
     addRow('  rating', `${cf.currentRating ?? 'unrated'} (max ${cf.maxRating ?? '—'})`);
     if (!hidden(hide, 'rank')) addRow('  rank', cf.rank ?? '—');
     if (!hidden(hide, 'solved')) addRow('  solved', fmt(cf.solved.total));
-    y += 6;
-  }
-  if (gh && !hidden(hide, 'github')) {
-    section('GitHub');
-    addRow('  repos', fmt(gh.publicRepos));
-    addRow('  stars', fmt(gh.stars));
-    if (gh.contrib !== null) addRow('  contrib (yr)', fmt(gh.contrib));
-    if (gh.currentStreak !== null) addRow('  streak', `${gh.currentStreak} d`, 'streak');
   }
   return wrapSvg({
     width: WIDTH,

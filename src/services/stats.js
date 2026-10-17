@@ -4,7 +4,6 @@ import {
   fetchCodeforcesSubmissions,
   dedupeAcceptedProblems,
 } from '../providers/codeforces/index.js';
-import { fetchGitHubProfile, colorFor } from '../providers/github/index.js';
 import { calculateStreak } from './streak.js';
 import { TtlCache } from './cache.js';
 import { config } from '../config/index.js';
@@ -152,74 +151,8 @@ export function normalizeCodeforces({ info, ratingHistory }, submissions = []) {
   };
 }
 
-export function normalizeGitHub({ user, graphqlData, ownRepos, languageBytes, stars, tokenUsed }) {
-  if (!user) return null;
-
-  // Language percentages from aggregated bytes.
-  const totalBytes = Object.values(languageBytes || {}).reduce((a, b) => a + b, 0);
-  const languages = Object.entries(languageBytes || {})
-    .map(([name, bytes]) => ({
-      name,
-      bytes,
-      percent: totalBytes > 0 ? (bytes / totalBytes) * 100 : 0,
-      color: colorFor(name),
-    }))
-    .sort((a, b) => b.bytes - a.bytes);
-
-  let contrib = null;
-  let currentStreak = null;
-  let longestStreak = null;
-  let totalCommits = null;
-  let totalPrs = null;
-  let totalIssues = null;
-  let followers = user.followers;
-  let activeDates = null;
-
-  if (graphqlData && graphqlData.user) {
-    const g = graphqlData.user;
-    totalCommits = g.contributionsCollection?.totalCommitContributions ?? null;
-    totalPrs = g.pullRequests?.totalCount ?? null;
-    totalIssues = g.issues?.totalCount ?? null;
-    followers = g.followers?.totalCount ?? followers;
-
-    const cal = g.contributionsCollection?.contributionCalendar;
-    if (cal) {
-      contrib = cal.totalContributions ?? null;
-      const days = (cal.weeks || []).flatMap((w) => w.contributionDays || []);
-      const activeDays = days
-        .filter((d) => d && Number(d.contributionCount) > 0)
-        .map((d) => d.date);
-      activeDates = activeDays;
-      const streak = calculateStreak(activeDays, { limited: false });
-      currentStreak = streak.current;
-      longestStreak = streak.longest;
-    }
-  }
-
-  return {
-    username: user.login,
-    name: user.name || null,
-    avatarUrl: user.avatar_url || null,
-    profileUrl: user.html_url || `https://github.com/${user.login}`,
-    publicRepos: user.public_repos ?? ownRepos?.length ?? 0,
-    followers: followers ?? 0,
-    following: user.following ?? 0,
-    stars,
-    languages,
-    contrib,
-    currentStreak,
-    longestStreak,
-    totalCommits,
-    totalPrs,
-    totalIssues,
-    activeDates,
-    tokenUsed: !!tokenUsed,
-  };
-}
-
 const leetCache = new TtlCache(config.cache);
 const cfCache = new TtlCache(config.cache);
-const ghCache = new TtlCache(config.cache);
 
 export async function getLeetCodeStats(username, { cache = leetCache } = {}) {
   const key = `lc:${username.toLowerCase()}`;
@@ -249,12 +182,4 @@ export async function getCodeforcesStats(handle, { cache = cfCache } = {}) {
   });
 }
 
-export async function getGitHubStats(username, { cache = ghCache } = {}) {
-  const key = `gh:${username.toLowerCase()}`;
-  return cache.getOrLoad(key, async () => {
-    const raw = await fetchGitHubProfile(username);
-    return normalizeGitHub(raw);
-  });
-}
-
-export const _caches = { leetCache, cfCache, ghCache };
+export const _caches = { leetCache, cfCache };

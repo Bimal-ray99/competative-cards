@@ -16,9 +16,6 @@ export const config = {
     maxRetries: parseInt10(process.env.UPSTREAM_MAX_RETRIES, 2),
     userAgent: 'competitive-cards/0.1 (+https://github.com/your-user/competitive-cards)',
   },
-  github: {
-    token: process.env.GITHUB_TOKEN || null,
-  },
   rateLimit: {
     windowMs: parseInt10(process.env.RATE_LIMIT_WINDOW_MS, 60_000),
     max: parseInt10(process.env.RATE_LIMIT_MAX, 60),

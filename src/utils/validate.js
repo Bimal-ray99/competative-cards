@@ -56,10 +56,6 @@ const ALLOWED_CARDS = new Set([
   'combined',
   'skills',
   'languages',
-  'github-stats',
-  'github-streak',
-  'github-langs',
-  'github-profile',
 ]);
 export function parseCardType(value, fallback = 'overview') {
   if (typeof value !== 'string') return fallback;

@@ -9,12 +9,6 @@ import {
   renderSkills,
   renderLanguages,
 } from './svg/cards.js';
-import {
-  renderGitHubStats,
-  renderGitHubStreak,
-  renderGitHubLangs,
-  renderGitHubProfile,
-} from './svg/github.js';
 
 const FIELDS_BY_TYPE = {
   overview: ['solved', 'easy', 'medium', 'hard', 'acceptance', 'ranking', 'streak'],
@@ -22,13 +16,9 @@ const FIELDS_BY_TYPE = {
   streak: ['streak', 'total', 'active'],
   rating: ['rating', 'maxRating', 'rank', 'maxRank', 'contests', 'solved', 'graph'],
   heatmap: [],
-  combined: ['leetcode', 'codeforces', 'github', 'ranking', 'streak', 'rank', 'solved'],
+  combined: ['leetcode', 'codeforces', 'ranking', 'streak', 'rank', 'solved'],
   skills: [],
   languages: [],
-  'github-stats': ['stars', 'commits', 'prs', 'issues', 'contrib', 'repos'],
-  'github-streak': ['total', 'current', 'longest'],
-  'github-langs': [],
-  'github-profile': [],
 };
 
 function mergeHide(hide = [], sections = [], type) {
@@ -50,7 +40,6 @@ export function renderCard({
   type,
   leetcode,
   codeforces,
-  github,
   themeName,
   overrides,
   title,
@@ -77,27 +66,14 @@ export function renderCard({
       if (!leetcode && !codeforces) throw badRequest('heatmap requires a user');
       return renderHeatmap(leetcode || codeforces, opts);
     case 'combined':
-      if (!leetcode && !codeforces && !github)
-        throw badRequest('combined requires at least one user');
-      return renderCombined(leetcode, codeforces, github, opts);
+      if (!leetcode && !codeforces) throw badRequest('combined requires at least one user');
+      return renderCombined(leetcode, codeforces, opts);
     case 'skills':
       if (!leetcode) throw badRequest('skills card requires leetcode user');
       return renderSkills(leetcode, opts);
     case 'languages':
       if (!leetcode) throw badRequest('languages card requires leetcode user');
       return renderLanguages(leetcode, opts);
-    case 'github-stats':
-      if (!github) throw badRequest('github-stats card requires github user');
-      return renderGitHubStats(github, opts);
-    case 'github-streak':
-      if (!github) throw badRequest('github-streak card requires github user');
-      return renderGitHubStreak(github, opts);
-    case 'github-langs':
-      if (!github) throw badRequest('github-langs card requires github user');
-      return renderGitHubLangs(github, opts);
-    case 'github-profile':
-      if (!github) throw badRequest('github-profile card requires github user');
-      return renderGitHubProfile(github, opts);
     default:
       throw badRequest(`Unknown card type: ${type}`);
   }

@@ -17,7 +17,7 @@
       <div class="brand">
         <h1><span class="brand-accent">c</span>ompetitive-cards</h1>
         <p class="tagline">
-          A composable LeetCode, Codeforces, and GitHub stats card for your GitHub README — profile,
+          A composable LeetCode and Codeforces stats card for your GitHub README — profile,
           solved, streak, skills, languages, and a submission heatmap, each toggleable, in 20+
           themes. Pick your sections below and copy the embed markdown.
         </p>
@@ -47,9 +47,7 @@
           <input id="leetcode" type="text" autocomplete="off" placeholder="e.g. neal_wu" />
           <label for="codeforces">Codeforces handle</label>
           <input id="codeforces" type="text" autocomplete="off" placeholder="e.g. tourist" />
-          <label for="github">GitHub username</label>
-          <input id="github" type="text" autocomplete="off" placeholder="e.g. torvalds" />
-          <p class="hint">At least one required. GitHub streaks need <code>GITHUB_TOKEN</code>.</p>
+          <p class="hint">At least one required.</p>
         </section>
 
         <section>
@@ -64,12 +62,6 @@
             </optgroup>
             <optgroup label="Codeforces">
               <option value="rating">Rating</option>
-            </optgroup>
-            <optgroup label="GitHub">
-              <option value="github-stats">GitHub Stats</option>
-              <option value="github-streak">GitHub Streak</option>
-              <option value="github-langs">Top Languages</option>
-              <option value="github-profile">Profile</option>
             </optgroup>
             <optgroup label="Mixed">
               <option value="heatmap">Activity heatmap</option>
@@ -161,9 +153,8 @@
 
         <p class="footer-note">
           Streaks use the UTC calendar. When the upstream exposes a limited window, the card shows a
-          "limited" note instead of fabricating history. GitHub streaks require
-          <code>GITHUB_TOKEN</code>; without it, those fields are marked unavailable. See the
-          project README for the full options reference.
+          "limited" note instead of fabricating history. See the project README for the full
+          options reference.
         </p>
       </section>
     </main>

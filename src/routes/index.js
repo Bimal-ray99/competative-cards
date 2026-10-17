@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getLeetCodeStats, getCodeforcesStats, getGitHubStats } from '../services/stats.js';
+import { getLeetCodeStats, getCodeforcesStats } from '../services/stats.js';
 import { renderCard } from '../render/index.js';
 import { assertValidUsername, parseList, parseTheme, parseCardType } from '../utils/validate.js';
 import { THEME_NAMES } from '../render/themes/index.js';
@@ -48,9 +48,7 @@ function parseSections(value) {
   return parseList(value);
 }
 
-export function createRouter({
-  stats = { getLeetCodeStats, getCodeforcesStats, getGitHubStats },
-} = {}) {
+export function createRouter({ stats = { getLeetCodeStats, getCodeforcesStats } } = {}) {
   const router = Router();
 
   router.get('/health', (_req, res) => {
@@ -82,19 +80,9 @@ export function createRouter({
     }
   });
 
-  router.get('/github/:username', async (req, res, next) => {
-    try {
-      const username = assertValidUsername(req.params.username, 'github username');
-      const data = await stats.getGitHubStats(username);
-      res.json(data);
-    } catch (err) {
-      next(err);
-    }
-  });
-
   router.get('/card', async (req, res, next) => {
     try {
-      const { leetcode, codeforces, github, theme, hide, sections, title } = req.query;
+      const { leetcode, codeforces, theme, hide, sections, title } = req.query;
       const type = parseCardType(req.query.type);
       const themeName = parseTheme(theme);
       const hideList = parseList(hide);
@@ -118,7 +106,6 @@ export function createRouter({
 
       let leetData = null;
       let cfData = null;
-      let ghData = null;
       if (typeof leetcode === 'string' && leetcode.length > 0) {
         assertValidUsername(leetcode, 'leetcode');
         leetData = await stats.getLeetCodeStats(leetcode);
@@ -127,13 +114,9 @@ export function createRouter({
         assertValidUsername(codeforces, 'codeforces');
         cfData = await stats.getCodeforcesStats(codeforces);
       }
-      if (typeof github === 'string' && github.length > 0) {
-        assertValidUsername(github, 'github');
-        ghData = await stats.getGitHubStats(github);
-      }
 
-      if (!leetData && !cfData && !ghData) {
-        const err = new Error('At least one of leetcode, codeforces, github is required');
+      if (!leetData && !cfData) {
+        const err = new Error('At least one of leetcode or codeforces is required');
         err.statusCode = 400;
         throw err;
       }
@@ -144,7 +127,7 @@ export function createRouter({
           'Cache-Control',
           'public, max-age=600, s-maxage=3600, stale-while-revalidate=86400',
         );
-        res.json({ leetcode: leetData, codeforces: cfData, github: ghData });
+        res.json({ leetcode: leetData, codeforces: cfData });
         return;
       }
 
@@ -152,7 +135,6 @@ export function createRouter({
         type,
         leetcode: leetData,
         codeforces: cfData,
-        github: ghData,
         themeName,
         overrides,
         title: typeof title === 'string' ? title : undefined,

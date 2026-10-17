@@ -7,13 +7,9 @@
     streak: ['streak', 'total', 'active'],
     rating: ['rating', 'maxRating', 'rank', 'maxRank', 'contests', 'solved', 'graph'],
     heatmap: [],
-    combined: ['leetcode', 'codeforces', 'github', 'ranking', 'streak', 'rank', 'solved'],
+    combined: ['leetcode', 'codeforces', 'ranking', 'streak', 'rank', 'solved'],
     skills: [],
     languages: [],
-    'github-stats': ['stars', 'commits', 'prs', 'issues', 'contrib', 'repos'],
-    'github-streak': ['total', 'current', 'longest'],
-    'github-langs': [],
-    'github-profile': [],
   };
 
   // Overview card supports composite sections (skills/languages/heatmap
@@ -40,17 +36,12 @@
     skills: 'leetcode',
     languages: 'leetcode',
     rating: 'codeforces',
-    'github-stats': 'github',
-    'github-streak': 'github',
-    'github-langs': 'github',
-    'github-profile': 'github',
     heatmap: 'any',
     combined: 'any',
   };
   const DEFAULT_CARD_FOR = {
     leetcode: 'overview',
     codeforces: 'rating',
-    github: 'github-stats',
   };
 
   async function loadThemes() {
@@ -143,10 +134,8 @@
     const params = new URLSearchParams();
     const lc = $('leetcode').value.trim();
     const cf = $('codeforces').value.trim();
-    const gh = $('github').value.trim();
     if (lc) params.set('leetcode', lc);
     if (cf) params.set('codeforces', cf);
-    if (gh) params.set('github', gh);
     params.set('type', $('type').value);
     params.set('theme', themeOverride || $('theme').value);
     const title = $('title').value.trim();
@@ -224,7 +213,6 @@
     const have = {
       leetcode: !!$('leetcode').value.trim(),
       codeforces: !!$('codeforces').value.trim(),
-      github: !!$('github').value.trim(),
     };
     if (need === 'any') return;
     if (!have[need]) {
@@ -241,9 +229,8 @@
   function update() {
     const lc = $('leetcode').value.trim();
     const cf = $('codeforces').value.trim();
-    const gh = $('github').value.trim();
-    if (!lc && !cf && !gh) {
-      setStatus('Enter a LeetCode / Codeforces / GitHub username to begin.');
+    if (!lc && !cf) {
+      setStatus('Enter a LeetCode or Codeforces username to begin.');
       $('cardImg').removeAttribute('src');
       $('embedMd').value = '';
       $('dualEmbed').value = '';
@@ -255,14 +242,12 @@
     const url = buildUrl();
     const abs = absolutize(url);
     $('rawUrl').value = abs;
-    const names = [lc && 'LeetCode', cf && 'Codeforces', gh && 'GitHub']
-      .filter(Boolean)
-      .join(' + ');
+    const names = [lc && 'LeetCode', cf && 'Codeforces'].filter(Boolean).join(' + ');
     $('embedMd').value = `![${names} stats](${abs})`;
     const altTheme = $('theme').value === 'github-light' ? 'github-dark' : 'github-light';
     $('dualEmbed').value = buildDualEmbed(abs, altTheme);
 
-    const displayName = lc || gh || cf;
+    const displayName = lc || cf;
     setStatus(`Loading live data for ${displayName}…`);
     const img = $('cardImg');
     const reqId = ++updateSeq;
@@ -313,7 +298,6 @@
     const inputs = [
       'leetcode',
       'codeforces',
-      'github',
       'type',
       'theme',
       'title',

@@ -8,7 +8,7 @@ export const config = {
   host: process.env.HOST || '0.0.0.0',
   env: process.env.NODE_ENV || 'development',
   cache: {
-    ttlSeconds: parseInt10(process.env.CACHE_TTL_SECONDS, 600),
+    ttlSeconds: parseInt10(process.env.CACHE_TTL_SECONDS, 180),
     maxEntries: parseInt10(process.env.CACHE_MAX_ENTRIES, 500),
   },
   upstream: {

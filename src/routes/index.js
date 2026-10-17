@@ -143,9 +143,12 @@ export function createRouter({ stats = { getLeetCodeStats, getCodeforcesStats } 
       });
 
       res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+      // Shorter max-age so updates (streak flips at day boundary) show up on
+      // next page visit. CDN still holds longer via s-maxage; swr keeps us
+      // snappy during revalidation.
       res.setHeader(
         'Cache-Control',
-        'public, max-age=600, s-maxage=3600, stale-while-revalidate=86400',
+        'public, max-age=120, s-maxage=600, stale-while-revalidate=86400',
       );
       res.send(svg);
     } catch (err) {

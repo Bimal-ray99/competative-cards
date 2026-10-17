@@ -217,6 +217,85 @@ export function approxTextWidth(str, fontSize = 12) {
   return Math.max(1, String(str).length) * (fontSize * 0.58);
 }
 
+// Monospace char width — SF Mono / JetBrains Mono / Consolas average ~0.6em
+export function approxMonoWidth(str, fontSize = 13) {
+  return Math.max(1, String(str).length) * (fontSize * 0.6);
+}
+
+// Dotted leader line — fills space between a left label and right value with
+// evenly-spaced dots. Classic receipt / table-of-contents look. Returns an
+// SVG string that renders a label-left + dots + value-right row.
+export function receiptRow({
+  x,
+  y,
+  width,
+  label,
+  value,
+  labelColor,
+  valueColor,
+  dotColor,
+  fontSize = 13,
+  bold = false,
+  highlightColor,
+}) {
+  const safeLabel = escapeXml(label);
+  const safeValue = escapeXml(String(value));
+  const weight = bold ? '700' : '500';
+  const monoFont = 'ui-monospace, SF Mono, Consolas, "Liberation Mono", monospace';
+  const labelW = approxMonoWidth(safeLabel, fontSize);
+  const valueW = approxMonoWidth(safeValue, fontSize);
+  const gapStart = x + labelW + 6;
+  const gapEnd = x + width - valueW - 6;
+  const gapW = Math.max(10, gapEnd - gapStart);
+  const dotSpacing = fontSize * 0.55;
+  const dotCount = Math.max(1, Math.floor(gapW / dotSpacing));
+  const dots = [];
+  for (let i = 0; i < dotCount; i += 1) {
+    const dx = gapStart + i * dotSpacing + dotSpacing / 2;
+    dots.push(
+      `<circle cx="${dx.toFixed(1)}" cy="${y - fontSize / 3}" r="0.9" fill="${dotColor}" />`,
+    );
+  }
+  const bg = highlightColor
+    ? `<rect x="${x - 4}" y="${y - fontSize - 4}" width="${width + 8}" height="${fontSize + 10}" rx="4" fill="${highlightColor}" />`
+    : '';
+  return `${bg}<text x="${x}" y="${y}" font-family='${monoFont}' font-size="${fontSize}" font-weight="${weight}" fill="${labelColor}">${safeLabel}</text>${dots.join('')}<text x="${x + width}" y="${y}" text-anchor="end" font-family='${monoFont}' font-size="${fontSize}" font-weight="${weight}" fill="${valueColor}">${safeValue}</text>`;
+}
+
+// Perforated-edge divider line — mimics tear-off receipt perforation. Short
+// dashes with gaps. Horizontal; spans [x1..x2] at vertical y.
+export function perforatedLine({ x1, x2, y, color, dash = 4, gap = 4 }) {
+  const w = x2 - x1;
+  const stride = dash + gap;
+  const n = Math.floor(w / stride);
+  const parts = [];
+  for (let i = 0; i < n; i += 1) {
+    const sx = x1 + i * stride;
+    parts.push(
+      `<line x1="${sx}" y1="${y}" x2="${sx + dash}" y2="${y}" stroke="${color}" stroke-width="1" />`,
+    );
+  }
+  return parts.join('');
+}
+
+// Hex-badge grade display for the combined "CPI" card. Six-sided polygon
+// with centered grade letter + percent sublabel. Draws its own glow.
+export function hexBadge({ cx, cy, r, grade, percent, color, bg, textColor }) {
+  const points = [];
+  for (let i = 0; i < 6; i += 1) {
+    const a = (Math.PI / 3) * i - Math.PI / 2;
+    const px = cx + r * Math.cos(a);
+    const py = cy + r * Math.sin(a);
+    points.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+  }
+  const path = points.join(' ');
+  return `
+    <polygon points="${path}" fill="${bg}" stroke="${color}" stroke-width="2.5" />
+    <text x="${cx}" y="${cy + 2}" text-anchor="middle" dominant-baseline="middle" font-size="${Math.round(r * 0.8)}" font-weight="800" letter-spacing="-0.03em" fill="${textColor}">${escapeXml(String(grade))}</text>
+    <text x="${cx}" y="${cy + r * 0.55}" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="0.1em" fill="${color}">${escapeXml(String(percent))}%</text>
+  `;
+}
+
 export function chip({ x, y, label, fill, textColor, borderColor, height = 24, accentColor }) {
   const padding = 12;
   const w = Math.round(approxTextWidth(label, 12) + padding * 2);

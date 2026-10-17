@@ -29,7 +29,7 @@ describe('sections -> hide translation', () => {
     });
     expect(svg).toContain('Easy');
     expect(svg).toContain('Hard');
-    expect(svg).toContain('Ranking');
+    expect(svg).toMatch(/rank\s*#/i);
   });
 
   it('merges with explicit hide list (explicit wins)', () => {

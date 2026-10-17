@@ -10,3 +10,5 @@ yarn-debug.log*
 dist/
 .vscode/
 .idea/
+
+.vercel

@@ -29,8 +29,9 @@ describe('renderCard', () => {
       themeName: 'dark',
       hide: ['ranking'],
     });
-    expect(withRank).toContain('Ranking');
-    expect(hidden).not.toContain('Ranking');
+    // Rank line appears in header as "rank #N" (mono) when visible.
+    expect(withRank).toMatch(/rank\s*#/i);
+    expect(hidden).not.toMatch(/rank\s*#/i);
   });
 
   it('renders light theme with light bg', () => {

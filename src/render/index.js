@@ -8,6 +8,7 @@ import {
   renderCombined,
   renderSkills,
   renderLanguages,
+  renderDuet,
 } from './svg/cards.js';
 
 const FIELDS_BY_TYPE = {
@@ -17,6 +18,19 @@ const FIELDS_BY_TYPE = {
   rating: ['rating', 'maxRating', 'rank', 'maxRank', 'contests', 'solved', 'graph'],
   heatmap: [],
   combined: ['leetcode', 'codeforces', 'ranking', 'streak', 'rank', 'solved'],
+  duet: [
+    'easy',
+    'medium',
+    'hard',
+    'solved',
+    'acceptance',
+    'streak',
+    'rating',
+    'maxRating',
+    'rank',
+    'maxRank',
+    'contests',
+  ],
   skills: [],
   languages: [],
 };
